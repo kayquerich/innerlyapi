@@ -1,14 +1,14 @@
 from rest_framework.decorators import api_view, permission_classes
 from innerlyapp.models.Usuarios import Usuario
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 import json
 
 @api_view(['GET'])
-def getUsuarios(request):
+def getUsuarios(request): # para fins de testes
 
     try: 
 
@@ -23,8 +23,14 @@ def getUsuarios(request):
 def getUsuario(request, id):
 
     try:
-        usuario = Usuario.objects.get(id=id).usuarioDto()
-        return JsonResponse(usuario)
+
+        auth = User.objects.get(username=Usuario.objects.get(id=id).email)
+
+        if (request.user == auth):
+            usuario = Usuario.objects.get(id=id).usuarioDto()
+            return JsonResponse(usuario)
+        else:
+            return JsonResponse({'message' : 'você não tem permissão para realizar esta ação'})
     
     except Usuario.DoesNotExist:
         return JsonResponse({'message' : 'usuario não existe'})
@@ -96,17 +102,21 @@ def updateUsuario(request):
 
     dados = json.loads(request.body)
     usuario = Usuario.objects.get(id=dados.get('id'))
+    auth = User.objects.get(username=usuario.email)
 
-    try:
+    if request.user == auth:
+        try:
 
-        if dados.get('contato'):
+            if dados.get('contato'):
 
-            usuario.contato = dados.get('contato')
-            usuario.save()
+                usuario.contato = dados.get('contato')
+                usuario.save()
 
-            return JsonResponse({'message' : 'usuario alterado com sucesso'})
-        else :
-            return JsonResponse({'message' : 'impossivel alterar este campo'})
+                return JsonResponse({'message' : 'usuario alterado com sucesso'})
+            else :
+                return JsonResponse({'message' : 'impossivel alterar este campo'})  
 
-    except Exception as e:
-        return JsonResponse({'message' : 'erro na ateração do usuario'})
+        except Exception as e:
+            return JsonResponse({'message' : 'erro na ateração do usuario'})
+    else:
+        return JsonResponse({'message' : 'você não tem permissão para realizar está ação'})
