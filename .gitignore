@@ -9,7 +9,6 @@ __pycache__/
 *$py.class
 
 # Banco de dados SQLite
-*.sqlite3
 
 # Configurações de IDE
 .vscode/
