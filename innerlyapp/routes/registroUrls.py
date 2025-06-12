@@ -5,5 +5,6 @@ urlpatterns = [
     path('create', createRegistro),
     path('', getRegistros),
     path('registro/<int:id>', getRegistro),
-    path('usuario/<str:idUsuario>', getRegistrosByUser)
+    path('usuario/<str:idUsuario>', getRegistrosByUser),
+    path('update', updateRegistro)
 ]

@@ -46,6 +46,7 @@ def getRegistro(request, id):
 
     usuario = request.user
     usuario = Usuario.objects.get(email=usuario)
+
     try:
         registro = Registro.objects.get(pk=id).outputRegistroDto()
 
@@ -79,7 +80,30 @@ def getRegistrosByUser(request, idUsuario):
 
         JsonResponse({'message' : 'falha na consulta'})
 
-@api_view(['GET'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def getRegistroByUser(request):
-    return JsonResponse({'message' : 'aaaaaaaaaaaaaaaaaaaa'})
+def updateRegistro(request):
+
+    dados = json.loads(request.body)
+    requestUser = request.user
+
+    try:
+
+        usuario = Usuario.objects.get(id=dados.get('idUsuario'))
+        registro = Registro.objects.get(pk=dados.get('idRegistro'))
+
+        if requestUser.username == usuario.email and registro.idUsuario == usuario:
+
+            for key, value in dados.items():
+                if key not in ['id', 'idUsuario', 'data']:
+                    setattr(registro, key, value)
+
+            registro.save()
+
+            return JsonResponse({'novoregistro' : registro.outputRegistroDto()})
+
+        else:
+            return JsonResponse({'message' : 'você não tem permissão para executar esta ação'})
+
+    except Usuario.DoesNotExist as e:
+        return JsonResponse({'message' : 'informe o id do usuario', 'erro' : str(e)})
