@@ -101,10 +101,9 @@ def logoutUsuario(request):
 def updateUsuario(request):
 
     dados = json.loads(request.body)
-    usuario = Usuario.objects.get(id=dados.get('id'))
-    auth = User.objects.get(username=usuario.email)
+    usuario = Usuario.objects.get(email=request.user.username)
 
-    if request.user == auth:
+    if usuario:
         try:
 
             if dados.get('contato'):
