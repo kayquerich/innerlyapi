@@ -20,14 +20,13 @@ def getUsuarios(request): # para fins de testes
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getUsuario(request, id):
+def getUsuario(request):
 
     try:
 
-        auth = User.objects.get(username=Usuario.objects.get(id=id).email)
+        usuario = Usuario.objects.get(email=request.user.username).usuarioDto()
 
-        if (request.user == auth):
-            usuario = Usuario.objects.get(id=id).usuarioDto()
+        if usuario:
             return JsonResponse(usuario)
         else:
             return JsonResponse({'message' : 'você não tem permissão para realizar esta ação'})
