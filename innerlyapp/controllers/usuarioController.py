@@ -34,7 +34,7 @@ def getUsuario(request):
     except Usuario.DoesNotExist:
         return JsonResponse({'message' : 'usuario não existe'})
     except Exception as e:
-        return JsonResponse({'message' : 'erro na consulta'})
+        return JsonResponse({'message' : 'erro na consulta', 'erro' : str(e)})
     
 @api_view(['POST'])
 def createUsuario(request):
