@@ -63,7 +63,7 @@ def createUsuario(request):
     except Exception as e:
         return JsonResponse({
             'message' : 'erro ao criar usuario',
-            'criado' : False
+            'criado' : False,
         })
     
 @api_view(['POST'])

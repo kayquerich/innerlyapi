@@ -74,9 +74,16 @@ WSGI_APPLICATION = 'innerly.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { # banco de dados externo
     'default': dj_database_url.parse(os.getenv('DB_URL'))
 }
+
+# DATABASES = {
+#     'default' : {
+#         'ENGINE' : 'django.db.backends.sqlite3',
+#         'NAME' : os.path.join(BASE_DIR, 'innerly', 'db.sqlite3'), 
+#     }
+# }
 
 
 # Password validation
