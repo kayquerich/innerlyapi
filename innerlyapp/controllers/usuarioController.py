@@ -24,7 +24,7 @@ def getUsuario(request):
 
     try:
 
-        usuario = Usuario.objects.get(email=request.user.username).usuarioDto()
+        usuario = Usuario.objects.get(username=request.user.username).usuarioDto()
 
         if usuario:
             return JsonResponse(usuario)
@@ -45,6 +45,7 @@ def createUsuario(request):
 
         usuario = Usuario.objects.create(
             nome=dadosUsuario.get('nome'),
+            username=dadosUsuario.get('username'),
             email=dadosUsuario.get('email'),
             nascimento=dadosUsuario.get('nascimento'),
             senha=dadosUsuario.get('senha')
@@ -70,7 +71,10 @@ def createUsuario(request):
 def loginUsuario(request):
 
     dados = json.loads(request.body)
-    user = authenticate(username=dados.get('email'), password=dados.get('senha'))
+
+    verify = Usuario.objects.get(email=dados.get('email'))
+
+    user = authenticate(username=verify.username, password=dados.get('senha'))
 
     if user is not None:
         token, _ = Token.objects.get_or_create(user=user)
@@ -100,19 +104,21 @@ def logoutUsuario(request):
 def updateUsuario(request):
 
     dados = json.loads(request.body)
-    usuario = Usuario.objects.get(email=request.user.username)
+    usuario = Usuario.objects.get(username=request.user.username)
 
     if usuario:
+
         try:
 
-            if dados.get('contato'):
+            if dados:
 
+                usuario.nome = dados.get('nome')
                 usuario.contato = dados.get('contato')
                 usuario.save()
 
                 return JsonResponse({'message' : 'usuario alterado com sucesso'})
             else :
-                return JsonResponse({'message' : 'impossivel alterar este campo'})  
+                return JsonResponse({'message' : 'campos inválidos para a alteração'})  
 
         except Exception as e:
             return JsonResponse({'message' : 'erro na ateração do usuario'})

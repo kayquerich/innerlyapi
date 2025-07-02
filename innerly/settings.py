@@ -1,18 +1,17 @@
-import dj_database_url
 from dotenv import load_dotenv
 from pathlib import Path
 import os
 load_dotenv()
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-0lef7yw+ckz*-1tkj*#iahs_u*6#-n30nsi9pb!v*bjf_6&zir")
 
 ALLOWED_HOSTS = ["*"]
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -74,16 +73,16 @@ WSGI_APPLICATION = 'innerly.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = { # banco de dados externo
-    'default': dj_database_url.parse(os.getenv('DB_URL'))
-}
-
-# DATABASES = {
-#     'default' : {
-#         'ENGINE' : 'django.db.backends.sqlite3',
-#         'NAME' : os.path.join(BASE_DIR, 'innerly', 'db.sqlite3'), 
-#     }
+# DATABASES = { # banco de dados externo
+#     'default': dj_database_url.parse(os.getenv('DB_URL'))
 # }
+
+DATABASES = {
+    'default' : {
+        'ENGINE' : 'django.db.backends.sqlite3',
+        'NAME' : os.path.join(BASE_DIR, 'innerly', 'db.sqlite3'), 
+    }
+}
 
 
 # Password validation

@@ -14,7 +14,7 @@ def createRegistro(request):
 
     try:
 
-        usuario = Usuario.objects.get(email=request.user)
+        usuario = Usuario.objects.get(username=request.user)
 
         registro = Registro.objects.create(
             idUsuario=usuario,
@@ -45,7 +45,7 @@ def getRegistros(request): # para fins de testes
 def getRegistro(request, id):
 
     usuario = request.user
-    usuario = Usuario.objects.get(email=usuario)
+    usuario = Usuario.objects.get(username=usuario)
 
     try:
         registro = Registro.objects.get(pk=id).outputRegistroDto()
@@ -65,7 +65,7 @@ def getRegistrosByUser(request, idUsuario):
 
     try:
         auth = Usuario.objects.get(id=idUsuario)
-        auth = User.objects.get(username=auth.email)
+        auth = User.objects.get(username=auth.username)
 
         if (request.user == auth):
 
@@ -92,7 +92,7 @@ def updateRegistro(request):
         usuario = Usuario.objects.get(id=dados.get('idUsuario'))
         registro = Registro.objects.get(pk=dados.get('idRegistro'))
 
-        if requestUser.username == usuario.email and registro.idUsuario == usuario:
+        if requestUser.username == usuario.username and registro.idUsuario == usuario:
 
             for key, value in dados.items():
                 if key not in ['id', 'idUsuario', 'data']:

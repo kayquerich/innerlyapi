@@ -8,6 +8,7 @@ import uuid
 class Usuario(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = models.CharField(max_length=254, null=False, blank=False, unique=True)
     nome = models.CharField(max_length=254, null=False, blank=False)
     email = models.EmailField(max_length=254, unique=True)
     contato = models.CharField(max_length=254, null=True, blank=True)
@@ -42,4 +43,4 @@ class Usuario(models.Model):
 @receiver(post_save, sender=Usuario)
 def criarUsuarioAuth(sender, instance, created, **kwargs):
     if created:
-        User.objects.create(username=instance.email, password=instance.senha)
+        User.objects.create(username=instance.username, email=instance.email, password=instance.senha)
