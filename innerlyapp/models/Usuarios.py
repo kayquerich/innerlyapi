@@ -39,6 +39,7 @@ class Usuario(models.Model):
         return {
             'id' : self.id,
             'nome' : self.nome,
+            'username' : self.username,
             'email' : self.email,
             'contato' : self.contato,
             'nascimento' : self.nascimento

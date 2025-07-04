@@ -44,6 +44,17 @@ class Profissional(models.Model):
     def __str__(self):
         return self.nome
     
+    def profissionalDto(self):
+        return {
+            'id' : self.id,
+            'credencial' : f'{self.concelho}-{self.regiao} {self.numeroRegistro}',
+            'nome' : self.nome,
+            'username' : self.username,
+            'email' : self.email,
+            'contato' : self.contato,
+            'nascimento' : self.nascimento
+        }
+    
 @receiver(post_save, sender=Profissional)
 def criarUsuarioAuth(sender, instance, created, **kwargs):
     if created:
