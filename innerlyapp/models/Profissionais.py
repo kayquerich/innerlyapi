@@ -1,17 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.contrib.auth.hashers import make_password
 import uuid
+from django.contrib.auth.hashers import make_password
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 import random
 
-class Usuario(models.Model):
+class Profissional(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=254, null=False, blank=False, unique=True)
+    concelho = models.CharField(max_length=3, choices=[
+        ('CRM', 'Concelho Regional de Medicina'),
+        ('CRP', 'Concelho Regional de Psicologia')
+    ], blank=False, null=False)
+    regiao = models.CharField(max_length=2, blank=False, null=False)
+    numeroRegistro = models.CharField(max_length=10, blank=False, null=False)
     nome = models.CharField(max_length=254, null=False, blank=False)
-    email = models.EmailField(max_length=254, unique=True)
+    username = models.CharField(max_length=254, null=False, blank=False, unique=True)
+    email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
     contato = models.CharField(max_length=254, null=True, blank=True)
     nascimento = models.DateField()
     senha = models.CharField(max_length=254, null=False, blank=False)
@@ -24,8 +30,11 @@ class Usuario(models.Model):
         if self.email:
             self.email = self.email.lower()
 
+        if self.regiao:
+            self.regiao = self.regiao.upper()
+
         if self.username:
-            self.username = f'{self.username.lower()}#{random.randint(1000,9999)}'
+            self.username = f'{self.username.lower()}#{random.randint(1000,9999)}' 
 
         if self.senha:
             self.senha = make_password(self.senha)
@@ -35,16 +44,7 @@ class Usuario(models.Model):
     def __str__(self):
         return self.nome
     
-    def usuarioDto(self):
-        return {
-            'id' : self.id,
-            'nome' : self.nome,
-            'email' : self.email,
-            'contato' : self.contato,
-            'nascimento' : self.nascimento
-        }
-    
-@receiver(post_save, sender=Usuario)
+@receiver(post_save, sender=Profissional)
 def criarUsuarioAuth(sender, instance, created, **kwargs):
     if created:
         User.objects.create(username=instance.username, email=instance.email, password=instance.senha)
