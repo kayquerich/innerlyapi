@@ -16,6 +16,7 @@ class Registro(models.Model):
             'id' : self.pk,
             'idUsuario' : self.idUsuario.id,
             'nomeusuario' : self.idUsuario.nome,
+            'humor' : self.valueHumor,
             'strhumor' : strhumorlist[self.valueHumor -1],
             'data' : self.dataRegistro,
             'anotacao' : self.anotacao
