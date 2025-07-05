@@ -3,7 +3,7 @@ from innerlyapp.models.Usuarios import Usuario
 
 class Registro(models.Model):
 
-    idUsuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=False, blank=False)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=False, blank=False)
     valueHumor = models.SmallIntegerField()
     dataRegistro = models.DateField()
     anotacao = models.TextField()
@@ -14,8 +14,8 @@ class Registro(models.Model):
 
         return {
             'id' : self.pk,
-            'idUsuario' : self.idUsuario.id,
-            'nomeusuario' : self.idUsuario.nome,
+            'usuario' : self.usuario.id,
+            'nomeusuario' : self.usuario.nome,
             'humor' : self.valueHumor,
             'strhumor' : strhumorlist[self.valueHumor -1],
             'data' : self.dataRegistro,
@@ -24,4 +24,4 @@ class Registro(models.Model):
 
     def __str__(self):
 
-        return f'resgistro - {self.dataRegistro} - {self.idUsuario.nome}'
+        return f'resgistro - {self.dataRegistro} - {self.usuario.nome}'

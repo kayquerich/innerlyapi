@@ -55,6 +55,9 @@ class Profissional(models.Model):
             'nascimento' : self.nascimento
         }
     
+    class Meta:
+        verbose_name_plural = 'Profissionais'
+    
 @receiver(post_save, sender=Profissional)
 def criarUsuarioAuth(sender, instance, created, **kwargs):
     if created:
