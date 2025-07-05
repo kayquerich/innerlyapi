@@ -76,5 +76,57 @@ def logoutProfissional(request):
         token.delete()
     except Exception as e:
         JsonResponse({'message' : 'erro ao realizar o logout'})
-        
+
     JsonResponse({'message' : 'logout realizado com sucesso'})
+
+@api_view(['GET'])
+def getProfissionais(request):
+
+    try:
+
+        profissionais = list(Profissional.objects.values())
+        return JsonResponse(profissionais, safe=False)
+    except Exception as e:
+        return JsonResponse({
+            'message' : 'erro na consulta',
+            'erro' : str(e)
+        })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProfissional(request):
+
+    user = request.user
+
+    try:
+
+        profissional = Profissional.objects.get(username=user.username).profissionalDto()
+
+        if profissional:
+            return JsonResponse(profissional)
+        else :
+            return JsonResponse({'message' : 'você não tem permissão para realizar esta ação'})
+    except Exception as e:
+        return JsonResponse({'message' : 'erro na consulta'})
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def upadateProfissional(request):
+
+    dados = json.loads(request.body)
+
+    try:
+
+        profissional = Profissional.objects.get(username=request.user.username)
+
+        if profissional:
+
+            profissional.nome = dados.get('nome')
+            profissional.contato = dados.get('contato')
+            profissional.save()
+
+            return JsonResponse({'message' : 'dados alterados com sucesso'})
+        else:
+            return JsonResponse({'message' : 'não foi possivel realizar está ação'})
+    except Exception as e:
+        return JsonResponse({'message' : 'erro na alteração'})
