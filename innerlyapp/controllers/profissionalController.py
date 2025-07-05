@@ -41,7 +41,7 @@ def createProfissional(request):
         })
     
 @api_view(['GET'])
-def getProfissionais(request):
+def getProfissionais(request): # para fins de teste
 
     try:
 
