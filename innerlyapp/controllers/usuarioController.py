@@ -65,39 +65,7 @@ def createUsuario(request):
             'message' : 'erro ao criar usuario',
             'criado' : False,
         })
-    
-@api_view(['POST'])
-def loginUsuario(request):
 
-    dados = json.loads(request.body)
-
-    verify = Usuario.objects.get(email=dados.get('email'))
-
-    user = authenticate(username=verify.username, password=dados.get('senha'))
-
-    if user is not None:
-        token, _ = Token.objects.get_or_create(user=user)
-        return JsonResponse({
-            'message' : 'usuario logado com sucesso',
-            'token' : token.key
-        })
-    else:
-        return JsonResponse({'message' : 'credenciais inválidas'})
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def logoutUsuario(request):
-
-    user = request.user
-
-    try:
-        token = Token.objects.get(user=user)
-        token.delete()
-    except Exception as e:
-        return JsonResponse({'message' : 'falha a realizar logout'})
-    
-    return JsonResponse({'message' : 'logout realizado com sucesso'})
-    
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateUsuario(request):

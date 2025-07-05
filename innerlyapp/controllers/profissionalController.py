@@ -40,45 +40,6 @@ def createProfissional(request):
             'criado' : False
         })
     
-@api_view(['POST'])
-def loginProfissional(request):
-
-    dados = json.loads(request.body)
-
-    try:
-
-        verify = Profissional.objects.get(email=dados.get('email'))
-        user = authenticate(username=verify.username, password=dados.get('senha'))
-
-        if user is not None:
-
-            token, _ = Token.objects.get_or_create(user=user)
-
-            return JsonResponse({
-                'message' : 'login realizado com sucesso',
-                'token' : token
-            })
-        else:
-            JsonResponse({
-                'message' : 'credênciais inválidas'
-            })
-    except Exception as e:
-        return JsonResponse({'message' : 'erro ao fazer o login'})
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def logoutProfissional(request):
-
-    user = request.user
-
-    try:
-        token = Token.objects.get(user=user)
-        token.delete()
-    except Exception as e:
-        JsonResponse({'message' : 'erro ao realizar o logout'})
-
-    JsonResponse({'message' : 'logout realizado com sucesso'})
-
 @api_view(['GET'])
 def getProfissionais(request):
 
