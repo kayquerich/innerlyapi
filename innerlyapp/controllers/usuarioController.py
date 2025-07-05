@@ -1,7 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from innerlyapp.models.Usuarios import Usuario
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
