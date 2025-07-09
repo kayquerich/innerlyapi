@@ -26,14 +26,14 @@ def getUsuario(request):
         usuario = Usuario.objects.get(username=request.user.username).usuarioDto()
 
         if usuario:
-            return JsonResponse(usuario)
+            return JsonResponse(usuario, status=200)
         else:
-            return JsonResponse({'message' : 'você não tem permissão para realizar esta ação'})
+            return JsonResponse({'message' : 'você não tem permissão para realizar esta ação'}, status=401)
     
     except Usuario.DoesNotExist:
-        return JsonResponse({'message' : 'usuario não existe'})
+        return JsonResponse({'message' : 'usuario não existe'}, status=404)
     except Exception as e:
-        return JsonResponse({'message' : 'erro na consulta'})
+        return JsonResponse({'message' : 'erro na consulta'}, status=400)
     
 @api_view(['POST'])
 def createUsuario(request):
@@ -54,17 +54,17 @@ def createUsuario(request):
             return JsonResponse({
                 'message' : 'usuario criado com sucesso',
                 'criado' : True
-            })
+            }, status=201)
         else:
             return JsonResponse({
                 'message' : 'não foi possivel criar o usuario',
                 'criado' : False
-            })
+            }, status=400)
     except Exception as e:
         return JsonResponse({
             'message' : 'erro ao criar usuario',
             'criado' : False,
-        })
+        }, status=409)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

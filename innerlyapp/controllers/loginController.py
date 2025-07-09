@@ -23,22 +23,22 @@ def accountVerify(modelClass, dados):
     except Exception as e:
         return JsonResponse({
             'message' : 'erro ao fazer o login'
-        })
+        }, status=409)
     
 def buildResponse(token, isProUser):
 
     if token:
-        return {
+        return JsonResponse({
             'message' : 'login realizado com sucesso',
             'token' : token.key,
             'isprouser' : isProUser
-        }
+        }, status=200)
     else :
-        return {
+        return JsonResponse({
             'message' : 'credênciais inválidas, não foi possivel fazer o login',
             'token' : None,
             'isprouser' : isProUser
-        }
+        }, status=401)
 
 
 @api_view(['POST'])
@@ -50,18 +50,20 @@ def login(request):
 
         token = accountVerify(Usuario, dados=dados)
 
-        return JsonResponse(buildResponse(token, False))
+        return buildResponse(token, False)
 
     elif Profissional.objects.filter(email=dados.get('email')).first():
         
         token = accountVerify(Profissional, dados=dados)
 
-        return JsonResponse(buildResponse(token, True))
+        return buildResponse(token, True)
     
     else:
         return JsonResponse({
-            'message' : 'credênciais inválidas, não foi possivel realizar o login'
-        })
+            'message' : 'credênciais inválidas, não foi possivel realizar o login',
+            'token' : None, 
+            'isprouser' : False
+        }, status=401)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -75,6 +77,6 @@ def logout(request):
         token.delete()
 
     except Exception as e:
-        return JsonResponse({'message' : 'erro ao realizar o logout'})
+        return JsonResponse({'message' : 'erro ao realizar o logout'}, status=401)
 
-    return JsonResponse({'message' : 'logout realizado com sucesso'})
+    return JsonResponse({'message' : 'logout realizado com sucesso'}, status=200)

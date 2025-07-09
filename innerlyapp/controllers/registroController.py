@@ -5,6 +5,7 @@ from innerlyapp.models.Usuarios import Usuario
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 import json
+from datetime import datetime
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -17,19 +18,32 @@ def createRegistro(request):
         usuario = Usuario.objects.get(username=request.user)
 
         registro = Registro.objects.create(
-            idUsuario=usuario,
-            valueHumor=int(dados.get('valuehumor')),
-            dataRegistro=dados.get('data'),
+            usuario=usuario,
+            valueHumor=int(dados.get('value_humor')),
+            dataRegistro=datetime.strptime(dados.get('data'), '%Y-%m-%d').date(),
             anotacao=dados.get('anotacao')
         )
         
-        return JsonResponse({
-            'message' : 'registro criado com sucesso',
-            'resgistro' : registro.outputRegistroDto()    
-        })
+        if registro:
+
+            return JsonResponse({
+                'message' : 'registro criado com sucesso',
+                'registro' : registro.outputRegistroDto(),
+                'criado' : True    
+            }, status=201)
+        else :
+
+            return JsonResponse({
+                'message' : 'Não foi possivel criar o registro',
+                'criado' : False
+            }, status=409)
     
     except Exception as e:
-        return JsonResponse({'message' : 'erro ao criar o registro'})
+        print(str(e))
+        return JsonResponse({
+            'message' : 'erro ao criar o registro',
+            'criado' : False    
+        }, status=409)
 
 @api_view(['GET'])
 def getRegistros(request): # para fins de testes
@@ -70,7 +84,7 @@ def getRegistrosByUser(request, idUsuario):
         if (request.user == auth):
 
             usuario = Usuario.objects.get(id=idUsuario)
-            registros = list(Registro.objects.filter(idUsuario=usuario).values())
+            registros = [registro.outputRegistroDto() for registro in Registro.objects.filter(usuario=usuario)]
 
             return JsonResponse(registros, safe=False)
         else :
@@ -78,7 +92,7 @@ def getRegistrosByUser(request, idUsuario):
     
     except Exception as e:
 
-        JsonResponse({'message' : 'falha na consulta'})
+        return JsonResponse({'message' : 'falha na consulta', 'error' : str(e)})
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

@@ -1,5 +1,6 @@
 from django.db import models
 from innerlyapp.models.Usuarios import Usuario
+from django.forms.models import model_to_dict
 
 class Registro(models.Model):
 
@@ -10,15 +11,12 @@ class Registro(models.Model):
 
     def outputRegistroDto(self):
 
-        strhumorlist = ['muito-mal', 'mal', 'mais-ou-menos', 'bem', 'muito-bem']
-
         return {
-            'id' : self.pk,
-            'usuario' : self.usuario.id,
-            'nomeusuario' : self.usuario.nome,
-            'humor' : self.valueHumor,
-            'strhumor' : strhumorlist[self.valueHumor -1],
-            'data' : self.dataRegistro,
+            'usuario' : self.usuario.usuarioDto(),
+            'title' : f'Detalhes - {self.dataRegistro.strftime("%d/%m/%Y")}',
+            'br_date' : self.dataRegistro.strftime("%d/%m/%Y"),
+            'value_humor' : self.valueHumor,
+            'data_registro' : self.dataRegistro,
             'anotacao' : self.anotacao
         }
 

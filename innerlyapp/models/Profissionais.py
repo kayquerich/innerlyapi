@@ -14,7 +14,7 @@ class Profissional(models.Model):
         ('CRP', 'Concelho Regional de Psicologia')
     ], blank=False, null=False)
     regiao = models.CharField(max_length=2, blank=False, null=False)
-    numeroRegistro = models.CharField(max_length=10, blank=False, null=False)
+    numeroRegistro = models.CharField(max_length=10, blank=False, null=False, unique=True)
     nome = models.CharField(max_length=254, null=False, blank=False)
     username = models.CharField(max_length=254, null=False, blank=False, unique=True)
     email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
@@ -23,6 +23,9 @@ class Profissional(models.Model):
     senha = models.CharField(max_length=254, null=False, blank=False)
 
     def save(self, *args, **kwargs):
+
+        if not self.senha:
+            raise ValueError("Senha não pode ser vazia")
 
         if self.nome:
             self.nome = self.nome.upper()

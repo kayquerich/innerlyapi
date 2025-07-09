@@ -18,6 +18,9 @@ class Usuario(models.Model):
 
     def save(self, *args, **kwargs):
 
+        if not self.senha:
+            raise ValueError("a senha não pode ser vazia")
+
         if self.nome:
             self.nome = self.nome.upper()
 

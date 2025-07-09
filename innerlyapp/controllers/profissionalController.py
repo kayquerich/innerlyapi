@@ -19,7 +19,7 @@ def createProfissional(request):
             email = dados.get('email'),
             nascimento = dados.get('nascimento'),
             senha = dados.get('senha'),
-            concelho = dados.get('concelho'),
+            concelho = dados.get('concelho').upper(),
             regiao = dados.get('regiao'),
             numeroRegistro = dados.get('registro')
         )
@@ -28,17 +28,17 @@ def createProfissional(request):
             return JsonResponse({
                 'message' : 'conta criada com sucesso',
                 'criado' : True
-            })
+            }, status=201)
         else:
             return JsonResponse({
                 'message' : 'não foi possivel criar sua conta',
                 'criado' : False
-            })
+            }, status=400)
     except Exception as e:
         return JsonResponse({
             'message' : 'erro ao criar sua conta',
             'criado' : False
-        })
+        }, status=409)
     
 @api_view(['GET'])
 def getProfissionais(request): # para fins de teste
