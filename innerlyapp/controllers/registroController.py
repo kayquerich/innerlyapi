@@ -103,21 +103,20 @@ def updateRegistro(request):
 
     try:
 
-        usuario = Usuario.objects.get(id=dados.get('idUsuario'))
-        registro = Registro.objects.get(pk=dados.get('idRegistro'))
+        usuario = Usuario.objects.get(username=requestUser.username)
+        registro = Registro.objects.get(pk=dados.get('id'))
 
-        if requestUser.username == usuario.username and registro.idUsuario == usuario:
+        if usuario and registro.usuario.id == usuario.id:
 
-            for key, value in dados.items():
-                if key not in ['id', 'idUsuario', 'data']:
-                    setattr(registro, key, value)
+            registro.anotacao = dados.get('anotacao')
+            registro.valueHumor = dados.get('value_humor')
 
             registro.save()
 
-            return JsonResponse({'novoregistro' : registro.outputRegistroDto()})
+            return JsonResponse({'novo_registro' : registro.outputRegistroDto()}, status=200)
 
         else:
-            return JsonResponse({'message' : 'você não tem permissão para executar esta ação'})
+            return JsonResponse({'message' : 'você não tem permissão para executar esta ação'}, status=401)
 
     except Usuario.DoesNotExist as e:
-        return JsonResponse({'message' : 'informe o id do usuario', 'erro' : str(e)})
+        return JsonResponse({'message' : 'informe o id do usuario', 'erro' : str(e)}, status=401)
