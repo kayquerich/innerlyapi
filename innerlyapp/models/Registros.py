@@ -12,6 +12,7 @@ class Registro(models.Model):
     def outputRegistroDto(self):
 
         return {
+            'id' : self.id,
             'usuario' : self.usuario.usuarioDto(),
             'title' : f'Detalhes - {self.dataRegistro.strftime("%d/%m/%Y")}',
             'br_date' : self.dataRegistro.strftime("%d/%m/%Y"),
