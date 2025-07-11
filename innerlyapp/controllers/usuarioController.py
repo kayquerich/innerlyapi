@@ -82,6 +82,9 @@ def updateUsuario(request):
 
                 usuario.nome = dados.get('nome')
                 usuario.contato = dados.get('contato')
+                usuario.genero = dados.get('genero')
+                usuario.biografia = dados.get('biografia')
+                
                 usuario.save()
 
                 return JsonResponse({'message' : 'usuario alterado com sucesso'})
