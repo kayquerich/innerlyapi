@@ -29,7 +29,7 @@ class Usuario(models.Model):
         if self.email:
             self.email = self.email.lower()
 
-        if self.username:
+        if self._state.adding and self.username:
             self.username = f'{self.username.lower()}#{random.randint(1000,9999)}'
 
         if self.senha:
