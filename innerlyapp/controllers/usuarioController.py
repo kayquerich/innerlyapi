@@ -47,6 +47,7 @@ def createUsuario(request):
             username=dadosUsuario.get('username'),
             email=dadosUsuario.get('email'),
             nascimento=dadosUsuario.get('nascimento'),
+            genero=dadosUsuario.get('genero'),
             senha=dadosUsuario.get('senha')
         )
 

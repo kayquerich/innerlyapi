@@ -17,6 +17,7 @@ def createProfissional(request):
             nome = dados.get('nome'),
             username = dados.get('username'),
             email = dados.get('email'),
+            genero=dados.get('genero'),
             nascimento = dados.get('nascimento'),
             senha = dados.get('senha'),
             concelho = dados.get('concelho').upper(),

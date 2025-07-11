@@ -20,6 +20,8 @@ class Profissional(models.Model):
     email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
     contato = models.CharField(max_length=254, null=True, blank=True)
     nascimento = models.DateField()
+    genero = models.CharField(max_length=254, null=False, blank=False, default='unknow')
+    biografia = models.CharField(max_length=254, null=True, blank=True, default='Olá estou no innerly!')
     senha = models.CharField(max_length=254, null=False, blank=False)
 
     def save(self, *args, **kwargs):
@@ -55,7 +57,9 @@ class Profissional(models.Model):
             'username' : self.username,
             'email' : self.email,
             'contato' : self.contato,
-            'nascimento' : self.nascimento
+            'nascimento' : self.nascimento,
+            'genero' : self.genero,
+            'biografia' : self.biografia
         }
     
     class Meta:
