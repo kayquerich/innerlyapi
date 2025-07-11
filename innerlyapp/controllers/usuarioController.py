@@ -87,11 +87,11 @@ def updateUsuario(request):
                 
                 usuario.save()
 
-                return JsonResponse({'message' : 'usuario alterado com sucesso'})
+                return JsonResponse({'message' : 'usuario alterado com sucesso'}, status=200)
             else :
-                return JsonResponse({'message' : 'campos inválidos para a alteração'})  
+                return JsonResponse({'message' : 'campos inválidos para a alteração'}, status=409)  
 
         except Exception as e:
-            return JsonResponse({'message' : 'erro na ateração do usuario'})
+            return JsonResponse({'message' : 'erro na ateração do usuario'}, status=404)
     else:
-        return JsonResponse({'message' : 'você não tem permissão para realizar está ação'})
+        return JsonResponse({'message' : 'você não tem permissão para realizar está ação'}, status=401)
