@@ -6,6 +6,9 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 import random
 
+def generate_code():
+    return uuid.uuid4().hex[:6].upper()
+
 class Profissional(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -23,6 +26,7 @@ class Profissional(models.Model):
     genero = models.CharField(max_length=254, null=False, blank=False, default='unknow')
     biografia = models.CharField(max_length=254, null=True, blank=True, default='Olá estou no innerly!')
     senha = models.CharField(max_length=254, null=False, blank=False)
+    codigo_acompanhamento = models.CharField(max_length=6, unique=True, default=generate_code)
 
     def save(self, *args, **kwargs):
 

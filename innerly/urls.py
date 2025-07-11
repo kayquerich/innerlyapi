@@ -9,6 +9,7 @@ urlpatterns = [
     path('usuarios/', include('innerlyapp.routes.usuarioUrls')),
     path('registros/', include('innerlyapp.routes.registroUrls')),
     path('profissionais/', include('innerlyapp.routes.profissionalUrls')),
+    path('autorizacoes/', include('innerlyapp.routes.autorizacaoUrls')),
     path('login', login),
     path('logout', logout),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
