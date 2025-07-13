@@ -10,6 +10,16 @@ class Acompanhamento(models.Model):
     dataCriacao = models.DateField(auto_now_add=True)
     data_finalizacao = models.DateField(blank=True, null=True)
 
+    def acompanhamento_dto(self):
+
+        return {
+            'data_inicio' : self.dataCriacao,
+            'is_ativo' : self.isAtivo,
+            'nome_profissional' : self.profissional.nome,
+            'biografia' : self.profissional.biografia,
+            'codigo_acompanhamento' : self.profissional.codigo_acompanhamento,
+        }
+
     def __str__(self):
         return f'autorização {self.usuario.nome} - {self.profissional.nome}'
     

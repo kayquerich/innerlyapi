@@ -4,5 +4,6 @@ from innerlyapp.controllers.acompanhamentoController import *
 urlpatterns = [
     path('solicitacao/solicitar', solicitarAcompanhamento),
     path('solicitacao/responder', responderSolicitacao),
-    path('solicitacao/listar', listaSolicitacoes)
+    path('solicitacao/listar', listaSolicitacoes),
+    path('listar', listarAcompanhamentos)
 ]

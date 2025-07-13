@@ -123,3 +123,28 @@ def listaSolicitacoes(request):
         return JsonResponse({
             'message' : 'Você não tem permissão para realizar esta ação'
         }, status=401)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def listarAcompanhamentos(request):
+
+    usuario = Usuario.objects.get(username=request.user.username)
+    
+    if usuario:
+        try:
+
+            acompanhamentos = [acompanhamento.acompanhamento_dto() for acompanhamento in Acompanhamento.objects.filter(usuario=usuario)]
+
+            return JsonResponse(acompanhamentos, safe=False, status=200)
+
+        except Exception as e:
+
+            return JsonResponse({
+                'message' : 'erro na consulta'
+            }, status=404)
+
+    else:
+
+        return JsonResponse({
+            'message' : 'você não tem permissão para realizar está ação'
+        }, status=401)
