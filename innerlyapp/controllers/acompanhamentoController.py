@@ -7,6 +7,7 @@ from innerlyapp.models.Acompanhamentos import Acompanhamento
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 import json
+from datetime import date
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -126,7 +127,7 @@ def listaSolicitacoes(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def listarAcompanhamentos(request):
+def listarAcompanhamentos(request): # falta o lado do profissional que ainda não fiz
 
     usuario = Usuario.objects.get(username=request.user.username)
     
@@ -148,3 +149,41 @@ def listarAcompanhamentos(request):
         return JsonResponse({
             'message' : 'você não tem permissão para realizar está ação'
         }, status=401)
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def encerrarAcompanhamento(request):
+
+    dados = json.loads(request.body)
+
+    usuario = Usuario.objects.filter(username=request.user.username).first()
+    if usuario:
+        
+        if dados.get('id'):
+
+            id = dados.get('id')
+            follow = Acompanhamento.objects.filter(id=id).first()
+
+            try:
+
+                follow.isAtivo = False
+                follow.data_finalizacao = date.today()
+                follow.save()
+
+            except Exception as e:
+                return JsonResponse({
+                    'message' : 'erro ao encerrar o acompanhamento'
+                }, status=409)
+            
+            return JsonResponse({
+                'message' : 'acompanhamento encerrado'
+            }, status=200)
+
+        else: 
+            return JsonResponse({
+                'message' : 'id do acompanhamento não informado'
+            }, status=401)
+
+    return JsonResponse({
+        'message' : 'ainda não fiz'
+    }, status=404)

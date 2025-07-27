@@ -5,5 +5,6 @@ urlpatterns = [
     path('solicitacao/solicitar', solicitarAcompanhamento),
     path('solicitacao/responder', responderSolicitacao),
     path('solicitacao/listar', listaSolicitacoes),
-    path('listar', listarAcompanhamentos)
+    path('listar', listarAcompanhamentos),
+    path('encerrar', encerrarAcompanhamento)
 ]

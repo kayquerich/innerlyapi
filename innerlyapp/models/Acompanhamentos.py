@@ -13,6 +13,7 @@ class Acompanhamento(models.Model):
     def acompanhamento_dto(self):
 
         return {
+            'id' : self.id,
             'data_inicio' : self.dataCriacao,
             'is_ativo' : self.isAtivo,
             'nome_profissional' : self.profissional.nome,
