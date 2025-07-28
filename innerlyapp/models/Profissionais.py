@@ -42,7 +42,7 @@ class Profissional(models.Model):
         if self.regiao:
             self.regiao = self.regiao.upper()
 
-        if self.username:
+        if self._state.adding and self.username:
             self.username = f'{self.username.lower()}#{random.randint(1000,9999)}' 
 
         if self.senha:
@@ -63,7 +63,16 @@ class Profissional(models.Model):
             'contato' : self.contato,
             'nascimento' : self.nascimento,
             'genero' : self.genero,
-            'biografia' : self.biografia
+            'biografia' : self.biografia,
+            'codigo_acompanhamento' : self.codigo_acompanhamento
+        }
+    
+    def dtoViewUser(self):
+        return {
+            'nome' : self.nome,
+            'contato' : self.contato,
+            'biografia' : self.biografia,
+            'codigo_acompanhamento' : self.codigo_acompanhamento
         }
     
     class Meta:

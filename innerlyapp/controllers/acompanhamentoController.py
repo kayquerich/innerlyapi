@@ -22,9 +22,6 @@ def solicitarAcompanhamento(request):
 
         if profissional and usuario:
 
-            print(usuario)
-            print(profissional)
-
             solicitacao = Solicitacao.objects.create(
                 usuario=usuario,
                 profissional=profissional,
@@ -71,11 +68,22 @@ def responderSolicitacao(request):
                 solicitacao.estado = 'aceita'
                 solicitacao.save()
 
-                acompanhamento = Acompanhamento.objects.create(
-                    usuario=solicitacao.usuario,
-                    profissional=solicitacao.profissional,
-                    isAtivo=True
-                )
+                acompanhamento = {}
+
+                acompanhamento = Acompanhamento.objects.filter(
+                    usuario=solicitacao.usuario, 
+                    profissional=solicitacao.profissional
+                ).first()
+
+                if acompanhamento:
+                    acompanhamento.isAtivo = True
+                    acompanhamento.save()
+                else :
+                    acompanhamento = Acompanhamento.objects.create(
+                        usuario=solicitacao.usuario,
+                        profissional=solicitacao.profissional,
+                        isAtivo=True
+                    )
 
                 return JsonResponse({
                     'message' : f'Solcitação aceita, você esta acompanhando {acompanhamento.usuario.nome} deste o dia {acompanhamento.dataCriacao}',
@@ -124,6 +132,53 @@ def listaSolicitacoes(request):
         return JsonResponse({
             'message' : 'Você não tem permissão para realizar esta ação'
         }, status=401)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getSolicitacaoByUser(request, codigo):
+
+    usuario = Usuario.objects.filter(username=request.user.username).first()
+
+    if usuario:
+
+        try:
+
+            profissional = Profissional.objects.filter(codigo_acompanhamento=codigo).first()
+            solicitacao = Solicitacao.objects.filter(usuario=usuario, profissional=profissional).first()
+
+            if solicitacao: return JsonResponse(solicitacao.solicitacao_dto(), status=200)
+            return JsonResponse({}, status=200)
+
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'message' : 'informações inválidas'}, status=409)
+
+    else:
+        return JsonResponse({ 'message' : 'você não tem permissão para realizar está ação' }, status=401)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAcompanhamentoByCode(request, codigo):
+
+    usuario = Usuario.objects.filter(username=request.user.username).first()
+
+    if usuario:
+
+        try:
+
+            profissional = Profissional.objects.filter(codigo_acompanhamento=codigo).first()
+            acompanhamento = Acompanhamento.objects.filter(usuario=usuario, profissional=profissional).first()
+
+            if acompanhamento:
+                return JsonResponse(acompanhamento.acompanhamento_dto(), status=200)
+            else: 
+                return JsonResponse({})
+
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'message' : 'erro na consulta dos dados'}, status=409)
+    
+    return JsonResponse({'message' : 'ainda não fiz'})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

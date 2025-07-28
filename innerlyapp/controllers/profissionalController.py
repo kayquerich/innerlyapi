@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from innerlyapp.models.Profissionais import Profissional
+from innerlyapp.models.Usuarios import Usuario
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
@@ -92,3 +93,31 @@ def upadateProfissional(request):
             return JsonResponse({'message' : 'não foi possivel realizar está ação'})
     except Exception as e:
         return JsonResponse({'message' : 'erro na alteração'})
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def listarProfissionais(request, parametro):
+
+    usuario = Usuario.objects.filter(username=request.user.username).first()
+
+    if not usuario: return JsonResponse({ 'message' : 'você não tem permissão para realizar a consulta' }, status=401)
+
+    parametro_busca = str( parametro or '' ).upper()
+
+    try:
+
+        query_1 = [ profissional.dtoViewUser() for profissional in Profissional.objects.filter(codigo_acompanhamento=parametro_busca) ]
+
+        query_2 = [ profissional.dtoViewUser() for profissional in Profissional.objects.filter(nome=parametro_busca) ]
+
+        profissionais = query_1 + query_2
+
+        return JsonResponse( profissionais, safe=False, status=200 )
+    
+    except Exception as e:
+        return JsonResponse({'message' : 'erro na consulta'}, status=409)
+
+
+        
+
+        

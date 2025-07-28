@@ -5,5 +5,6 @@ urlpatterns = [
     path('', getProfissionais),
     path('profissional', getProfissional),
     path('create', createProfissional),
-    path('update', upadateProfissional)
+    path('update', upadateProfissional),
+    path('listar/<str:parametro>', listarProfissionais)
 ]

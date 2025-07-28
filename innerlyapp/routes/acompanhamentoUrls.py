@@ -6,5 +6,7 @@ urlpatterns = [
     path('solicitacao/responder', responderSolicitacao),
     path('solicitacao/listar', listaSolicitacoes),
     path('listar', listarAcompanhamentos),
-    path('encerrar', encerrarAcompanhamento)
+    path('encerrar', encerrarAcompanhamento),
+    path('solicitacao/<str:codigo>', getSolicitacaoByUser),
+    path('codigo/<str:codigo>', getAcompanhamentoByCode)
 ]
