@@ -17,7 +17,17 @@ class Solicitacao(models.Model):
 
     def solicitacao_dto(self):
 
+        user_data = {
+            'nome' : self.usuario.nome,
+            'biografia' : self.usuario.biografia,
+            'nascimento' : self.usuario.nascimento,
+            'contato' : self.usuario.contato,
+            'genero' : self.usuario.genero
+        }
+
         return {
+            'id' : self.id,
+            'dados_usuario' : user_data,
             'descricao' : f'Solicitação de acompanhamento {self.usuario.nome} - {self.profissional.nome}',
             'data' : self.dataSolicitacao,
             'menssagem' : self.menssagem_solicitacao,

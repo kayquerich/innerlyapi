@@ -64,10 +64,6 @@ def responderSolicitacao(request):
 
             if resposta == 'aceita':
 
-                solicitacao.isAceita = True
-                solicitacao.estado = 'aceita'
-                solicitacao.save()
-
                 acompanhamento = {}
 
                 acompanhamento = Acompanhamento.objects.filter(
@@ -85,22 +81,22 @@ def responderSolicitacao(request):
                         isAtivo=True
                     )
 
+                solicitacao.delete()
+
                 return JsonResponse({
                     'message' : f'Solcitação aceita, você esta acompanhando {acompanhamento.usuario.nome} deste o dia {acompanhamento.dataCriacao}',
                     'respondida' : True,
-                    'estado' : solicitacao.isAceita
+                    'estado' : True
                 }, status=200)
 
             else:
 
-                solicitacao.isAceita = False
-                solicitacao.estado = 'recusada'
-                solicitacao.save()
+                solicitacao.delete()
 
                 return JsonResponse({
                     'message' : f'Solcitação recusada, você pode comunicar a {solicitacao.usuario.nome} o motivo de ter recusado',
                     'respondida' : True,
-                    'estado' : solicitacao.isAceita
+                    'estado' : False
                 }, status=200)
 
         else:
@@ -123,7 +119,7 @@ def listaSolicitacoes(request):
 
     if profissional:
 
-        lista_solicitacoes = list(Solicitacao.objects.filter(profissional=profissional).values())
+        lista_solicitacoes = [solicitacoes.solicitacao_dto() for solicitacoes in Solicitacao.objects.filter(profissional=profissional)]
 
         return JsonResponse(lista_solicitacoes, safe=False, status=200)
 
@@ -184,7 +180,8 @@ def getAcompanhamentoByCode(request, codigo):
 @permission_classes([IsAuthenticated])
 def listarAcompanhamentos(request): # falta o lado do profissional que ainda não fiz
 
-    usuario = Usuario.objects.get(username=request.user.username)
+    usuario = Usuario.objects.filter(username=request.user.username).first()
+    profissional = Profissional.objects.filter(username=request.user.username).first()
     
     if usuario:
         try:
@@ -196,8 +193,17 @@ def listarAcompanhamentos(request): # falta o lado do profissional que ainda nã
         except Exception as e:
 
             return JsonResponse({
-                'message' : 'erro na consulta'
-            }, status=404)
+                'message' : 'erro na listagem dos acompanhamentos'
+            }, status=409)
+        
+    elif profissional:
+
+        try:
+            acompanhamentos = [acompanhamento.acompanhamento_dto() for acompanhamento in Acompanhamento.objects.filter(profissional=profissional)]
+
+            return JsonResponse(acompanhamentos, safe=False, status=200)
+        except Exception as e:
+            return JsonResponse({'message' : 'erro na listagem dos acompanhamentos'}, status=409)
 
     else:
 
