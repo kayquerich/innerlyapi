@@ -20,6 +20,18 @@ class Acompanhamento(models.Model):
             'biografia' : self.profissional.biografia,
             'codigo_acompanhamento' : self.profissional.codigo_acompanhamento,
         }
+    
+    def follow_preview_data(self):
+        return {
+            'id' : self.id,
+            'data_inicio' : self.dataCriacao,
+            'is_ativo' : self.isAtivo,
+            'user_data' : {
+                'nome' : self.usuario.nome,
+                'biografia' : self.usuario.biografia,
+                'contato' : self.usuario.contato,
+            }
+        }
 
     def __str__(self):
         return f'autorização {self.usuario.nome} - {self.profissional.nome}'

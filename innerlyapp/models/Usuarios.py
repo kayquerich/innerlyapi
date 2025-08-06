@@ -52,6 +52,15 @@ class Usuario(models.Model):
             'biografia' : self.biografia
         }
     
+    def user_data(self):
+        return {
+            'nome' : self.nome,
+            'biografia' : self.biografia,
+            'nascimento' : self.nascimento,
+            'contato' : self.contato,
+            'genero' : self.genero
+        }
+    
 @receiver(post_save, sender=Usuario)
 def criarUsuarioAuth(sender, instance, created, **kwargs):
     if created:

@@ -6,5 +6,7 @@ urlpatterns = [
     path('', getRegistros),
     path('registro/<int:id>', getRegistro),
     path('usuario/<str:idUsuario>', getRegistrosByUser),
-    path('update', updateRegistro)
+    path('update', updateRegistro),
+    path('profissional/listar', getRegistrosByFollows),
+    path('profissional/acompanhamento/<int:follow_id>', getRegistrosByFollow)
 ]

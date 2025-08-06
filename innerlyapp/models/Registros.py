@@ -20,6 +20,17 @@ class Registro(models.Model):
             'data_registro' : self.dataRegistro,
             'anotacao' : self.anotacao
         }
+    
+    def dto_view(self):
+        return {
+            'id' : self.id,
+            'dados_usuario' : self.usuario.user_data(),
+            'title' : f'Detalhes - {self.dataRegistro.strftime("%d/%m/%Y")}',
+            'br_date' : self.dataRegistro.strftime("%d/%m/%Y"),
+            'value_humor' : self.valueHumor,
+            'data_registro' : self.dataRegistro,
+            'anotacao' : self.anotacao
+        }
 
     def __str__(self):
 

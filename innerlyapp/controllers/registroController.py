@@ -2,6 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from innerlyapp.models.Registros import Registro
 from innerlyapp.models.Usuarios import Usuario
+from innerlyapp.models.Profissionais import Profissional
+from innerlyapp.models.Acompanhamentos import Acompanhamento
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 import json
@@ -120,3 +122,43 @@ def updateRegistro(request):
 
     except Usuario.DoesNotExist as e:
         return JsonResponse({'message' : 'informe o id do usuario', 'erro' : str(e)}, status=401)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getRegistrosByFollows(request):
+
+    profissional = Profissional.objects.filter(username=request.user.username).first()
+    follows_list = [acompanhamento for acompanhamento in Acompanhamento.objects.filter(profissional=profissional)]
+
+    try:
+
+        lista_registros = []
+        for follow in follows_list:
+            lista_registros.extend([registro.dto_view() for registro in Registro.objects.filter(usuario=follow.usuario)])
+        return JsonResponse(lista_registros, safe=False, status=200)
+    
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getRegistrosByFollow(request, follow_id):
+
+    profissional = Profissional.objects.get(username=request.user.username)
+    
+    if not profissional: return JsonResponse({'message' : 'você não tem permissão para realizar está ação'}, status=401)
+
+    follow = Acompanhamento.objects.get(id=follow_id)
+    try:
+        if follow.isAtivo and follow.profissional == profissional:
+
+            registros = [registro.dto_view() for registro in Registro.objects.filter(usuario=follow.usuario)]
+
+            return JsonResponse(registros, safe=False, status=200)
+
+        else: 
+            return JsonResponse([], safe=False, status=200)
+    except Exception as e:
+        return JsonResponse({'message' : 'erro na consulta'}, status=409)

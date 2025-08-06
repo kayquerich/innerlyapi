@@ -86,13 +86,15 @@ def upadateProfissional(request):
 
             profissional.nome = dados.get('nome')
             profissional.contato = dados.get('contato')
+            profissional.biografia = dados.get('biografia')
+            profissional.genero = dados.get('genero')
             profissional.save()
 
-            return JsonResponse({'message' : 'dados alterados com sucesso'})
+            return JsonResponse({'message' : 'dados alterados com sucesso'}, status=200)
         else:
-            return JsonResponse({'message' : 'não foi possivel realizar está ação'})
+            return JsonResponse({'message' : 'não foi possivel realizar está ação'}, status=401)
     except Exception as e:
-        return JsonResponse({'message' : 'erro na alteração'})
+        return JsonResponse({'message' : 'erro na alteração'}, status=409)
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

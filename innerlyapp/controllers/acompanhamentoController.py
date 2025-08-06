@@ -248,3 +248,20 @@ def encerrarAcompanhamento(request):
     return JsonResponse({
         'message' : 'ainda não fiz'
     }, status=404)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def listarClientes(request):
+
+    profissional = Profissional.objects.get(username=request.user.username)
+
+    if not profissional: return JsonResponse({'message' : 'você não tem permissão para executar está ação'}, status=401)
+
+    try:
+
+        clientes = [follow.follow_preview_data() for follow in Acompanhamento.objects.filter(profissional=profissional)]
+
+        return JsonResponse(clientes, safe=False, status=200)
+
+    except Exception as e:
+        return JsonResponse({'message': 'erro ao realizar a consulta'}, status=409)
