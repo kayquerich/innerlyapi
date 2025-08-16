@@ -119,7 +119,13 @@ def listarProfissionais(request, parametro):
     except Exception as e:
         return JsonResponse({'message' : 'erro na consulta'}, status=409)
 
+@api_view(['GET'])
+def listarNomes(request):
 
-        
-
-        
+    try:
+        lista_nome = [profissional.nome for profissional in Profissional.objects.all()]
+        return JsonResponse(lista_nome, safe=False, status=200)
+    except Exception as e:
+        return JsonResponse({
+            'message' : 'erro ao realizar a consulta'
+        }, status=409)
