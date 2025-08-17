@@ -17,6 +17,7 @@ class Usuario(models.Model):
     genero = models.CharField(max_length=254, null=False, blank=False, default='unknow')
     biografia = models.CharField(max_length=254, null=True, blank=True, default='Olá estou no innerly!')
     senha = models.CharField(max_length=254, null=False, blank=False)
+    profile_pic_value = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
 
@@ -49,7 +50,8 @@ class Usuario(models.Model):
             'contato' : self.contato,
             'nascimento' : self.nascimento,
             'genero' : self.genero,
-            'biografia' : self.biografia
+            'biografia' : self.biografia,
+            'profile_pic_value' : self.profile_pic_value
         }
     
     def user_data(self):
@@ -58,7 +60,8 @@ class Usuario(models.Model):
             'biografia' : self.biografia,
             'nascimento' : self.nascimento,
             'contato' : self.contato,
-            'genero' : self.genero
+            'genero' : self.genero,
+            'profile_pic_value' : self.profile_pic_value
         }
     
 @receiver(post_save, sender=Usuario)

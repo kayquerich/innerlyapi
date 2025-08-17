@@ -27,6 +27,7 @@ class Profissional(models.Model):
     biografia = models.CharField(max_length=254, null=True, blank=True, default='Olá estou no innerly!')
     senha = models.CharField(max_length=254, null=False, blank=False)
     codigo_acompanhamento = models.CharField(max_length=6, unique=True, default=generate_code)
+    profile_pic_value = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
 
@@ -64,7 +65,8 @@ class Profissional(models.Model):
             'nascimento' : self.nascimento,
             'genero' : self.genero,
             'biografia' : self.biografia,
-            'codigo_acompanhamento' : self.codigo_acompanhamento
+            'codigo_acompanhamento' : self.codigo_acompanhamento,
+            'profile_pic_value' : self.profile_pic_value,
         }
     
     def dtoViewUser(self):
@@ -72,7 +74,8 @@ class Profissional(models.Model):
             'nome' : self.nome,
             'contato' : self.contato,
             'biografia' : self.biografia,
-            'codigo_acompanhamento' : self.codigo_acompanhamento
+            'codigo_acompanhamento' : self.codigo_acompanhamento,
+            'profile_pic_value' : self.profile_pic_value
         }
     
     class Meta:
