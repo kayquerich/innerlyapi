@@ -19,6 +19,7 @@ class Acompanhamento(models.Model):
             'nome_profissional' : self.profissional.nome,
             'biografia' : self.profissional.biografia,
             'codigo_acompanhamento' : self.profissional.codigo_acompanhamento,
+            'profile_pic_value' : self.profissional.profile_pic_value
         }
     
     def follow_preview_data(self):
@@ -30,6 +31,7 @@ class Acompanhamento(models.Model):
                 'nome' : self.usuario.nome,
                 'biografia' : self.usuario.biografia,
                 'contato' : self.usuario.contato,
+                'profile_pic_value' : self.usuario.profile_pic_value
             }
         }
 

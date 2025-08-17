@@ -88,6 +88,7 @@ def upadateProfissional(request):
             profissional.contato = dados.get('contato')
             profissional.biografia = dados.get('biografia')
             profissional.genero = dados.get('genero')
+            profissional.profile_pic_value = dados.get('profile_pic_value')
             profissional.save()
 
             return JsonResponse({'message' : 'dados alterados com sucesso'}, status=200)

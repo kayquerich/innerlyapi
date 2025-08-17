@@ -84,6 +84,7 @@ def updateUsuario(request):
                 usuario.contato = dados.get('contato')
                 usuario.genero = dados.get('genero')
                 usuario.biografia = dados.get('biografia')
+                usuario.profile_pic_value = dados.get('profile_pic_value')
                 
                 usuario.save()
 
