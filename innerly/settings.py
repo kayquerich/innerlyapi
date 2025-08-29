@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from pathlib import Path
 import os
+import dj_database_url
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -11,7 +12,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-0lef7yw+ckz*-1tkj*#ia
 ALLOWED_HOSTS = ["*"]
 
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "db.sqlite3"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -78,10 +79,9 @@ WSGI_APPLICATION = 'innerly.wsgi.application'
 # }
 
 DATABASES = {
-    'default' : {
-        'ENGINE' : 'django.db.backends.sqlite3',
-        'NAME' : BASE_DIR / 'db.sqlite3',
-    }
+    'default' : dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
 }
 
 
