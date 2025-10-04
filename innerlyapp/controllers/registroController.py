@@ -134,7 +134,8 @@ def getRegistrosByFollows(request):
 
         lista_registros = []
         for follow in follows_list:
-            lista_registros.extend([registro.dto_view() for registro in Registro.objects.filter(usuario=follow.usuario)])
+            if follow.isAtivo:
+                lista_registros.extend([registro.dto_view() for registro in Registro.objects.filter(usuario=follow.usuario)])
         return JsonResponse(lista_registros, safe=False, status=200)
     
     except Exception as e:
