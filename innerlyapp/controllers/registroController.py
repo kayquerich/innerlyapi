@@ -25,6 +25,11 @@ def createRegistro(request):
             dataRegistro=datetime.strptime(dados.get('data'), '%Y-%m-%d').date(),
             anotacao=dados.get('anotacao')
         )
+
+        atividades_ids = dados.get('atividades', [])
+        if atividades_ids:
+            registro.atividades.set(atividades_ids)
+            registro.save()
         
         if registro:
 
@@ -51,7 +56,7 @@ def createRegistro(request):
 def getRegistros(request): # para fins de testes
 
     try:
-        registros = list(Registro.objects.values())
+        registros = [registro.outputRegistroDto() for registro in Registro.objects.all()]
         return JsonResponse(registros, safe=False)
     except Exception as e:
         return JsonResponse({'message' : 'erro na consulta'})
@@ -112,6 +117,7 @@ def updateRegistro(request):
 
             registro.anotacao = dados.get('anotacao')
             registro.valueHumor = dados.get('value_humor')
+            registro.atividades.set(dados.get('atividades', []))
 
             registro.save()
 
@@ -162,4 +168,17 @@ def getRegistrosByFollow(request, follow_id):
         else: 
             return JsonResponse([], safe=False, status=200)
     except Exception as e:
+        return JsonResponse({'message' : 'erro na consulta'}, status=409)
+    
+@api_view(['GET'])
+def getAtividades(request):
+
+    from innerlyapp.models.Atividades import Atividade
+
+    try:
+        atividades = [atividade for atividade in Atividade.objects.all()]
+        atividades = [{'id' : atividade.id, 'nome' : atividade.nome, 'icone' : atividade.icone} for atividade in atividades]
+        return JsonResponse(atividades, safe=False, status=200)
+    except Exception as e:
+        print(str(e))
         return JsonResponse({'message' : 'erro na consulta'}, status=409)

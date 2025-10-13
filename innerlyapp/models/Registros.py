@@ -1,5 +1,6 @@
 from django.db import models
 from innerlyapp.models.Usuarios import Usuario
+from innerlyapp.models.Atividades import Atividade
 from django.forms.models import model_to_dict
 
 class Registro(models.Model):
@@ -8,6 +9,7 @@ class Registro(models.Model):
     valueHumor = models.SmallIntegerField()
     dataRegistro = models.DateField()
     anotacao = models.TextField()
+    atividades = models.ManyToManyField(Atividade, blank=True)
 
     def outputRegistroDto(self):
 
@@ -18,7 +20,8 @@ class Registro(models.Model):
             'br_date' : self.dataRegistro.strftime("%d/%m/%Y"),
             'value_humor' : self.valueHumor,
             'data_registro' : self.dataRegistro,
-            'anotacao' : self.anotacao
+            'anotacao' : self.anotacao,
+            'atividades' : [model_to_dict(atividade) for atividade in self.atividades.all()]
         }
     
     def dto_view(self):
@@ -29,7 +32,8 @@ class Registro(models.Model):
             'br_date' : self.dataRegistro.strftime("%d/%m/%Y"),
             'value_humor' : self.valueHumor,
             'data_registro' : self.dataRegistro,
-            'anotacao' : self.anotacao
+            'anotacao' : self.anotacao,
+            'atividades' : [model_to_dict(atividade) for atividade in self.atividades.all()]
         }
 
     def __str__(self):

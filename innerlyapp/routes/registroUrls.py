@@ -8,5 +8,6 @@ urlpatterns = [
     path('usuario/<str:idUsuario>', getRegistrosByUser),
     path('update', updateRegistro),
     path('profissional/listar', getRegistrosByFollows),
-    path('profissional/acompanhamento/<int:follow_id>', getRegistrosByFollow)
+    path('profissional/acompanhamento/<int:follow_id>', getRegistrosByFollow),
+    path('atividades', getAtividades),
 ]
