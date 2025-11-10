@@ -5,4 +5,5 @@ urlpatterns = [
     path('criar', createObjetivo),
     path('listar', getObjetivosByUser),
     path('atualizar', updateObjetivo),
+    path('resultados/adicionar', cadastrar_resultados)
 ]

@@ -127,4 +127,40 @@ def updateObjetivo(request):
             'sucesso' : False    
         }, status=409)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def cadastrar_resultados(request):
+    
+    try:
+
+        dados = json.loads(request.body)
+        user = request.user
+        user = Usuario.objects.get(username=user)
+        id_objetivo = dados.get('id_objetivo')
+        objetivo = Objetivo.objects.get(id=id_objetivo, usuario=user)
+
+        if objetivo and user:
+
+            resultado = Resultado.objects.create(
+                objetivo=objetivo,
+                descricao=dados.get('descricao')
+            )
+
+            return JsonResponse({
+                'message' : 'resultado adicionado ao objetivo',
+                'adicionado' : True
+            }, status=200)
+
+        else:
+            return JsonResponse({
+                'message' : 'você não tem permissão para realizar está ação',
+                'adicionado' : False
+            }, status=401)
+
+    except Exception as e: 
+        return JsonResponse({
+            'message' : 'erro ao adicionar resultado',
+            'adicionado' : False
+        }, status=409)
+
     pass
